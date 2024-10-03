@@ -1,27 +1,16 @@
 import socket from '../socket'
 
-const SimpleCheckConn = (experiment) => {
-  socket.emit('checkConn', experiment);
-  socket.once('checkConn', (status) => {
-    console.log('Server response:', status);
-    return status.status
-  });
-};
-
-
+socket.on('hello', (data) => alert(data) );
 
 
 const CheckConn = (experiment) => {
-  return new Promise((resolve, reject) => {
-    socket.emit('checkConn', experiment);
-    socket.once('checkConn', (status) => {
-      console.log('Server response:', status);
-      console.log(status.status)
-      console.log(experiment)
+  return new Promise(resolve => {
+    socket.emit('connectDev', {manufacturer: 'owo', experiment: experiment, frequency: 2});
+    socket.once('connectDev', (status) => {
       if (status.status) {
         resolve(status.status);
       } else {
-        reject(new Error('Connection failed'));
+        alert(status.message);
       }
     });
   });
@@ -29,16 +18,15 @@ const CheckConn = (experiment) => {
 
   const manageData = async (experiment, isSendingData) => {
     console.log("dato",isSendingData)
-    const isConnected = await SimpleCheckConn(experiment);
-    if (!isConnected) {
-      if (isSendingData) {
-        socket.emit('startExperiment', true, 'expData');
-        socket.on('expData', (data) => {
-          console.log(data); 
-        });
-      } else {
-        socket.emit('startExperiment', false, 'expData');
-        socket.off('expData');
+    const isConnected = await CheckConn(experiment);
+    
+    const dataFn = data => console.log(data);
+
+    if (isConnected) {
+      if (!isSendingData) {
+        socket.emit('fakeExp');
+      } else { // It's sending data
+        socket.emit('pauseFake');
       }
     } else {
       console.log("Failed conection");

@@ -9,7 +9,7 @@ import Information from "../electricity/components/Information";
 import { Button, Icon } from '@chakra-ui/react'
 import kundtGIF from 'components/icons/kundtGif.jpg'
 import { portControl } from "../../../utils/arduinocontroller";
-import LinePlot from "../../../plots/lineplot";
+import SinWave from "animations/heatwaves/SinWave";
 
 // Assets
 import React from "react";
@@ -22,7 +22,7 @@ export default function HeatAndWaves1() {
   const [isVerified, setIsVerified] = React.useState(false);
   const [experimentFinished, setExperimentFinished] = React.useState(false);
   const [experimentRunning, setExperimentRunning] = useState(false);
-
+  const [frequency, setFrequency] = useState();
 
 
 
@@ -61,8 +61,13 @@ export default function HeatAndWaves1() {
         </SimpleGrid>
       </div>
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="10px" mb="20px">
-        <LinePlot />
+        <SinWave frequency={frequency} />
       </SimpleGrid>
+      <input
+        type="number"
+        value={frequency}
+        onChange={(e) => setFrequency(parseFloat(e.target.value))}
+      />
       <SimpleGrid display={'flex'} columns={{ base: 1, md: 2, xl: 3 }} gap='20px' mb='20px'>
         <Information title = '¿Qué es el Tubo de Kundt?' value = 'El tubo de Kundt es un dispositivo que permite reconocer la posición de nodos y vientres de ondas estacionarias, gracias a los diferentes patrones que forman en polvo de corcho presente en el interior de un tubo. El sonido se produce con un altavoz conectado a un generador de señales.'/>
         <img style={{height: '300px', borderRadius: '20px'}} src={kundtGIF}/>

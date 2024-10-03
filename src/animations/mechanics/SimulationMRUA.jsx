@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Matter from "matter-js";
-import { Box, Button, Input, Flex, Text } from "@chakra-ui/react";
+import { Box, Button, Input, Flex, Text, Heading } from "@chakra-ui/react";
+import Information from "views/admin/electricity/components/Information";
 
 const SimulationMRUA = () => {
   const [reset, setReset] = useState(false);
@@ -55,7 +56,7 @@ const SimulationMRUA = () => {
     var boxA = Bodies.circle(40, circleY, 20, {
       isStatic: false,
       render: {
-        fillStyle: "white",
+        fillStyle: "gray",
       },
     });
 
@@ -150,8 +151,8 @@ const SimulationMRUA = () => {
 
   return (
     <Flex flexDirection="row">
-      <Box p='4'>
-        <Text fontSize='3xl' color='teal' as='samp'>SIMULACION</Text>
+      <Box p='5'>
+      <Heading size="lg">Simulación MRUA</Heading>
         <Flex flexDirection="column">
           <Text marginBottom="5px">Ajusta el angulo</Text>
           <Input
@@ -161,7 +162,7 @@ const SimulationMRUA = () => {
             marginBottom="20px"
           />
           <Button
-            colorScheme="teal"
+            colorScheme="green"
             onClick={() => {
               handleStartButtonClick();
               setIsApplied(true);
@@ -172,11 +173,23 @@ const SimulationMRUA = () => {
           </Button>
           {isApplied && (
             <Text marginBottom="5px">
-              Tiempo transcurrido: {elapsedTime / 1000} segundos
+              Tiempo transcurrido: {elapsedTime / 1000} s
             </Text>
           )}
         </Flex>
       </Box>
+      {!isApplied && (
+        <Box
+          style={{
+            width: "700px",
+            height: "500px",
+            backgroundColor: "white", 
+            marginLeft: "20px",
+            borderRadius: "10px",
+            border:"1px solid gray"
+          }}
+        ></Box>
+      )}
       {isApplied && (
         <Box
           ref={myCanvasRef}

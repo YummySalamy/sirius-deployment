@@ -2,7 +2,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
 
-
 // Chakra imports
 import {
   Box,
@@ -18,12 +17,11 @@ import Information from "../electricity/components/Information";
 import { experience1 } from "variables/information";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { portControl } from "../../../utils/arduinocontroller";
-import LinePlot from "../../../plots/lineplot";
-import SimulationFreeFall from "animations/SimulationFreeFall";
-
-
-
-export default function Mechanics({loading, setLoading}) {
+import LinePlot from "../../../plots/MRUA/lineplot";
+import LinePlot2 from "../../../plots/MRUA/lineplot2";
+import SimulationMRUA from "animations/mechanics/SimulationMRUA";
+import kundtGIF from 'components/icons/kundtGif.jpg'
+export default function Mechanics() {
 
   const tableStyles = {
     border: '1px solid #e8e8e8',
@@ -51,23 +49,6 @@ export default function Mechanics({loading, setLoading}) {
     },
   ];
 
-  const tableData = [
-    {
-      key: '1',
-      name: 'Experimento 1',
-      description: 'Experimento de física 1',
-    },
-    {
-      key: '2',
-      name: 'Experimento 2',
-      description: 'Experimento de física 2',
-    },
-    {
-      key: '3',
-      name: 'Experimento 3',
-      description: 'Experimento de física 3',
-    },
-  ];
 
   //States for visual stuff
   const [isVerified, setIsVerified] = React.useState(false);
@@ -76,25 +57,21 @@ export default function Mechanics({loading, setLoading}) {
 
   
 
-  //States for data
-  const [data, setData] = useState([]);
-  const textColor = useColorModeValue("secondaryGray.900", "white");
-  const textColorBrand = useColorModeValue("brand.500", "white");
 
   //Handle functions
   const HandleVerify = async () => {
-    setLoading(true)
     const isConnected =  await portControl.CheckConn('MRUA');
     setIsVerified(isConnected);
   };
 
   const HandleExpData = () => {
     if(experimentRunning) {
-      portControl.manageData('MRUA', false);
+      portControl.manageData('MRUA', true);
       setExperimentFinished(true);
       setExperimentRunning(false);
     } else {
       setExperimentRunning(true);
+      portControl.manageData('MRUA', false);
     }
   };
   
@@ -135,21 +112,18 @@ export default function Mechanics({loading, setLoading}) {
           </Button>
         </SimpleGrid>
       </div>
-      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="10px" mb="20px">
-        <LinePlot />
+      <SimpleGrid columns={{ base: 1, md: 2, xl: 1 }} gap="10px" mb="20px">
+        <LinePlot2 xaxis="time" xname="Tiempo(s)" yname="Distancia(cm)" yaxis="distance" />
+  
       </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
-        <Table
-          style={tableStyles}
-          columns={columns}
-          dataSource={tableData}        
-        />
-        <Information title = 'Detalles del experimento' value = "La caída libre es un caso especial de movimiento con aceleración constante, porque la aceleración debida a la gravedad es siempre constante y hacia abajo. Esto es cierto incluso cuando un objeto es lanzado hacia arriba o tiene velocidad cero. Por ejemplo, cuando una pelota se lanza hacia arriba en el aire, la velocidad de la bola inicialmente es hacia arriba. Como la gravedad la jala hacia la Tierra con una aceleración constante ‍, la magnitud de la velocidad disminuye a medida que la pelota se aproxima a la altura máxima."/>
+      <SimpleGrid margin="3%" columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
+        <Information title = 'Movimiento de una particula' value = "El movimiento de una partícula es un caso especial de movimiento con aceleración constante, porque la aceleración debida a la gravedad es siempre constante y hacia abajo. Esto es cierto incluso cuando un objeto es lanzado hacia arriba o tiene velocidad cero. Por ejemplo, cuando una pelota se lanza hacia arriba en el aire, la velocidad de la bola inicialmente es hacia arriba. Como la gravedad la jala hacia la Tierra con una aceleración constante ‍, la magnitud de la velocidad disminuye a medida que la pelota se aproxima a la altura máxima."/>
+        <img style={{height: '300px', borderRadius: '20px'}} src={kundtGIF}/>
       </SimpleGrid>
     </Box>
-    <Box marginTop="5%">
+    <Box margin="5%">
     <Center>
-    <SimulationFreeFall /> 
+    <SimulationMRUA/>
     </Center>
     </Box>
     </ConfigProvider>

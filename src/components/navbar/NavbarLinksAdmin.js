@@ -1,7 +1,7 @@
 // Chakra Imports
 import {
 	Avatar,
-	Button,
+	Box,
 	Flex,
 	Icon,
 	Image,
@@ -11,12 +11,23 @@ import {
 	MenuItem,
 	MenuList,
 	Text,
-	useColorModeValue
+	useColorModeValue,
+	useDisclosure,
+	Modal,
+	ModalOverlay,
+	ModalContent,
+	ModalHeader,
+	ModalFooter,
+	ModalBody,
+	ModalCloseButton,
+	Grid,
+	GridItem
+
 } from '@chakra-ui/react';
 // Custom Components
 import { ItemContent } from 'components/menu/ItemContent';
 import { SearchBar } from 'components/navbar/searchBar/SearchBar';
-import { SidebarResponsive } from 'components/sidebar/Sidebar';
+import { SidebarResponsive } from 'components/SideBar/Sidebar';
 import PropTypes from 'prop-types';
 import React from 'react';
 // Assets
@@ -25,7 +36,53 @@ import { MdNotificationsNone, MdInfoOutline } from 'react-icons/md';
 import { FaEthereum } from 'react-icons/fa';
 import routes from 'routes.js';
 import { ThemeEditor } from './ThemeEditor';
+// Imgs
+import adrianimg from '../../assets/img/teampics/ADRIANGONGORA.jpg';
+import anyeliimg from '../../assets/img/teampics/ANYELISAN.jpeg';
+import chrisimg from '../../assets/img/teampics/CRHISACABA.jpg';
+import elkinimg from '../../assets/img/teampics/ELKINPULGAR.jpg';
+import haxelimg from '../../assets/img/teampics/HAXELLGOMEZ.jpg';
+import isaimg from '../../assets/img/teampics/ISACHACON.jpg';
+import bornaimg from '../../assets/img/teampics/JBORNCALLY.jpg';
+import jesusimg from '../../assets/img/teampics/JESUSACANTILLO.jpg';
+import barceloimg from '../../assets/img/teampics/JUANBARCE.jpg';
+import bermejoimg from '../../assets/img/teampics/JUANBERMEJO.jpg';
+import ortegaimg from '../../assets/img/teampics/JOSEORTEGA.jpg';
+import lucasimg from '../../assets/img/teampics/LUCASROMERO.jpg';
+import sebasimg from '../../assets/img/teampics/SEBASESCOBAR.jpeg';
+import yzhu from '../../assets/img/teampics/YZHU.jpg';
+import povea from '../../assets/img/teampics/JUANPOVEA.jpg';
+
+
+
+
+import { Carousel } from 'react-responsive-carousel';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+const slides = [
+	{ image: adrianimg, text: "Adrian Gongora" , major: "Ingeniería Electronica" },
+	{ image: anyeliimg, text: "Anyeli Sanjuan", major: "Ingeniería Civil" },
+	{ image: chrisimg, text: "Chis Cabana", major: "Ingeniería Electronica" },
+	{ image: elkinimg, text: "Elkin Pulgar" , major: "Ingeniería Electronica"},
+	{ image: haxelimg, text: "Haxell Gomez" , major: "Ingeniería Electronica"},
+	{ image: isaimg, text: "Isabela Chacón", major: "Ingeniería Electrica" },
+	{ image: bornaimg, text: "Juan Bornacelly", major: "Ingeniería Electrica" },
+	{ image: jesusimg, text: "Jesús Cantillo" , major : "Ingeniería de Sistemas"},
+	{ image: barceloimg, text: "fan de momo", major: "Ingeniería Electronica" },
+	{ image: bermejoimg, text: "Juan Bermejo", major: "Ingeniería Electronica" },
+	{ image: ortegaimg, text: "José Ortega" , major: "Ingeniería Electronica"},
+	{ image: lucasimg, text: "Lucas Romero", major: "Ingeniería Electronica" },
+	{ image: sebasimg, text: "Sebastian Escobar", major: "Ingeniería Electronica" },
+	{ image: yzhu, text: "Yovany Zhu" , major : "Ingeniería de Sistemas"},
+	{ image: povea, text: "Juan Povea", major : "Ingeniería de Sistemas" },
+
+  ];
+
+
+
+
+
 export default function HeaderLinks(props) {
+	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { secondary } = props;
 	// Chakra Color Mode
 	const navbarIcon = useColorModeValue('gray.400', 'white');
@@ -42,6 +99,37 @@ export default function HeaderLinks(props) {
 	);
 	const borderButton = useColorModeValue('secondaryGray.500', 'whiteAlpha.200');
 	return (
+		<>
+
+<Modal style={{borderRadius:"20px"}} isOpen={isOpen} onClose={onClose} maxWidth="100%">
+  <ModalOverlay />
+  <ModalContent maxWidth="80%" bg="gray.100" color="gray.900" boxShadow="md">
+    <ModalHeader textAlign="center" fontSize="2xl" bg="#4429fc" color="white" boxShadow="sm">Nuestro equipo</ModalHeader>
+    <ModalCloseButton />
+    <ModalBody>
+      <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))" gap={6} p={4}>
+        {slides.map((slide, index) => (
+          <GridItem key={index} textAlign="center">
+            <Box borderRadius="5px" overflow="hidden">
+              <Image 
+                src={slide.image} 
+                alt={slide.text} 
+                w="100%" 
+                h="80%" 
+                objectPosition="center" 
+              />
+            </Box>
+            <Text fontSize="md" fontWeight="bold" mt={2}>{slide.text}</Text>
+            <Text fontSize="sm" color="#4429fc">{slide.major}</Text>
+          </GridItem>
+        ))}
+      </Grid>
+    </ModalBody>
+  </ModalContent>
+</Modal>
+
+
+
 		<Flex
 			w={{ sm: '100%', md: 'auto' }}
 			alignItems="center"
@@ -80,8 +168,8 @@ export default function HeaderLinks(props) {
 						</Text>
 					</Flex>
 					<Flex flexDirection="column" p="10px">
-						<MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} borderRadius="8px" px="14px">
-							<Text fontSize="sm">¿Quienes somos?</Text>
+						<MenuItem onClick={onOpen} _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} borderRadius="8px" px="14px">
+  							<Text fontSize="sm">¿Quienes somos?</Text>
 						</MenuItem>
 						<MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} borderRadius="8px" px="14px">
 							<Text fontSize="sm">Configuración</Text>
@@ -98,6 +186,7 @@ export default function HeaderLinks(props) {
 				</MenuList>
 			</Menu>
 		</Flex>
+		</>
 	);
 }
 

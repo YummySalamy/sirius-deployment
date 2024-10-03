@@ -18,8 +18,8 @@ import Information from "../electricity/components/Information";
 import { experience1 } from "variables/information";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { portControl } from "../../../utils/arduinocontroller";
-import LinePlot from "../../../plots/lineplot";
-import SimulationFreeFall from "animations/SimulationFreeFall";
+import BarPlot from "plots/freefall/barplot";
+import SimulationFreeFall from "animations/mechanics/SimulationFreeFall";
 
 
 
@@ -51,24 +51,6 @@ export default function Mechanics({loading, setLoading}) {
     },
   ];
 
-  const tableData = [
-    {
-      key: '1',
-      name: 'Experimento 1',
-      description: 'Experimento de física 1',
-    },
-    {
-      key: '2',
-      name: 'Experimento 2',
-      description: 'Experimento de física 2',
-    },
-    {
-      key: '3',
-      name: 'Experimento 3',
-      description: 'Experimento de física 3',
-    },
-  ];
-
   //States for visual stuff
   const [isVerified, setIsVerified] = React.useState(false);
   const [experimentFinished, setExperimentFinished] = React.useState(false);
@@ -83,18 +65,18 @@ export default function Mechanics({loading, setLoading}) {
 
   //Handle functions
   const HandleVerify = async () => {
-    setLoading(true)
     const isConnected =  await portControl.CheckConn('FF');
     setIsVerified(isConnected);
   };
 
   const HandleExpData = () => {
     if(experimentRunning) {
-      portControl.manageData('MRUA', false);
+      portControl.manageData('FF', false);
       setExperimentFinished(true);
       setExperimentRunning(false);
     } else {
       setExperimentRunning(true);
+      portControl.manageData('FF', false);
     }
   };
   
@@ -136,18 +118,13 @@ export default function Mechanics({loading, setLoading}) {
         </SimpleGrid>
       </div>
       <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="10px" mb="20px">
-        <LinePlot />
+        <BarPlot />
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap="20px" mb="20px">
-        <Table
-          style={tableStyles}
-          columns={columns}
-          dataSource={tableData}        
-        />
-        <Information title = 'Detalles del experimento' value = "La caída libre es un caso especial de movimiento con aceleración constante, porque la aceleración debida a la gravedad es siempre constante y hacia abajo. Esto es cierto incluso cuando un objeto es lanzado hacia arriba o tiene velocidad cero. Por ejemplo, cuando una pelota se lanza hacia arriba en el aire, la velocidad de la bola inicialmente es hacia arriba. Como la gravedad la jala hacia la Tierra con una aceleración constante ‍, la magnitud de la velocidad disminuye a medida que la pelota se aproxima a la altura máxima."/>
+        <Information title = 'Caída Libre' value = "La caída libre es un caso ideal de movimiento en el que el aire no ofrece, porque la aceleración debida a la gravedad es siempre constante y hacia abajo. Esto es cierto incluso cuando un objeto es lanzado hacia arriba o tiene velocidad cero. Por ejemplo, cuando una pelota se lanza hacia arriba en el aire, la velocidad de la bola inicialmente es hacia arriba. Como la gravedad la jala hacia la Tierra con una aceleración constante ‍, la magnitud de la velocidad disminuye a medida que la pelota se aproxima a la altura máxima."/>
       </SimpleGrid>
     </Box>
-    <Box marginTop="5%">
+    <Box margin="5%">
     <Center>
     <SimulationFreeFall /> 
     </Center>

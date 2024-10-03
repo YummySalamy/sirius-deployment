@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import socket from "../socket";
+import socket from "../../socket";
 import Chart from "react-apexcharts";
 
 
@@ -7,54 +7,30 @@ import Chart from "react-apexcharts";
 const LinePlot = () => {
   const chartRef = useRef(null);
   const [series, setSeries] = useState([{
-    data: [{ x: 1, y: 2 }, { x: 3, y: 4 }],
-    fill: {
-      type: 'gradient',
-      gradient: {
-        shade: 'dark',
-        type: 'horizontal',
-        shadeIntensity: 0.5,
-        gradientToColors: ['#00f2c3'],
-        inverseColors: true,
-        opacityFrom: 1,
-        opacityTo: 1,
-        stops: [0, 80, 100]
-      }
-    }
+    data: [{ x: 0, y: 0 }	],
   }]);
   
 
   const options = {
     chart: { type: "area" },
-    xaxis: { type: "numeric" },
+    xaxis: {
+       type: "numeric",
+       title: {
+        text: "Tiempo (s)"
+      }
+   },
     yaxis: {
       title: {
-        text: "Temperatura (C)"
+        text: "Distancia (cm)"
       }
     },
-    colors:['#4E03FC'],
-    dropShadow: {
-      enabled: true,
-      top: 0,
-      left: 0,
-      blur: 3,
-      opacity: 0.5
-    },
-    fill: {
-      type: 'gradient',
-      gradient: {
-        shade: 'dark',
-        type: 'horizontal',
-        shadeIntensity: 0.5,
-        gradientToColors: ['#00f2c3'],
-        inverseColors: true,
-        opacityFrom: 1,
-        opacityTo: 1,
-        stops: [0, 100]
-      }
+    markers: {
+      size: 0,
+      style: 'hollow',
+    }, 
+    dataLabels: {
+      enabled: false // <--- HERE
     }
-
-  
   };
 
   const MAX_POINTS = 100;
@@ -106,24 +82,12 @@ const LinePlot = () => {
   */
   const updateData = (data) => {
     const parsedData = JSON.parse(data);
-    const { time, distance } =  parsedData.MRUA;
+    console.log(data)
+    const { time, distance} =  parsedData.MRUA;
     setSeries(prevSeries => {
       const newData = { 
         x: time, 
         y: distance,
-        fill: {
-          type: 'gradient',
-          gradient: {
-            shade: 'dark',
-            type: 'horizontal',
-            shadeIntensity: 0.5,
-            gradientToColors: ['#00f2c3'],
-            inverseColors: true,
-            opacityFrom: 1,
-            opacityTo: 1,
-            stops: [0, 80, 100]
-          }
-        }
       };
       const updatedSeries = [{ ...prevSeries[0], data: [...prevSeries[0].data, newData] }];
       if (updatedSeries[0].data.length > MAX_POINTS) {

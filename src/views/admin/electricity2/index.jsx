@@ -18,8 +18,7 @@ import Information from "../electricity/components/Information";
 import { experience1 } from "variables/information";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { portControl } from "../../../utils/arduinocontroller";
-import LinePlot from "../../../plots/lineplot";
-import SimulationFreeFall from "animations/SimulationFreeFall";
+import LinePlot from "plots/magneticfield/lineplot";
 
 
 
@@ -69,35 +68,30 @@ export default function Mechanics({loading, setLoading}) {
     },
   ];
 
-  //States for visual stuff
   const [isVerified, setIsVerified] = React.useState(false);
   const [experimentFinished, setExperimentFinished] = React.useState(false);
   const [experimentRunning, setExperimentRunning] = useState(false);
 
   
-
-  //States for data
   const [data, setData] = useState([]);
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const textColorBrand = useColorModeValue("brand.500", "white");
 
-  //Handle functions
   const HandleVerify = async () => {
-    setLoading(true)
-    const isConnected =  await portControl.CheckConn('EF');
+    const isConnected =  await portControl.CheckConn('MF');
     setIsVerified(isConnected);
   };
 
   const HandleExpData = () => {
     if(experimentRunning) {
-      portControl.manageData('MRUA', false);
+      portControl.manageData('MF', true);
       setExperimentFinished(true);
       setExperimentRunning(false);
     } else {
       setExperimentRunning(true);
+      portControl.manageData('MF', false);
     }
   };
-  
   return (
     <ConfigProvider
     theme={{
@@ -135,8 +129,11 @@ export default function Mechanics({loading, setLoading}) {
           </Button>
         </SimpleGrid>
       </div>
-      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap="10px" mb="20px">
-        <LinePlot />
+      <SimpleGrid padding="25px"columns={{ base: 1, md: 1, xl: 1 }} gap="10px" mb="20px">
+        <LinePlot xaxis='time' xname='Tiempo(s)' yaxis='field' yname='Campo (G)' title="Campo vs tiempo"/>
+      </SimpleGrid>
+      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px' mb='20px'>
+        <Information title = 'Densidad del flujo magnetico' value = 'La densidad de campo magnético también conocida como densidad de flujo magnético es una medida de la cantidad de magnetismo o número de líneas de fuerza que atraviesa perpedicularmente un área'/>
       </SimpleGrid>
     </Box>
     </ConfigProvider>
